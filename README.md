@@ -1,4 +1,4 @@
-# Terraform module for provisioning Datomic Transactor On-Prem version in AWS
+# Terraform module for provisioning Datomic Transactor On-Prem version on AWS
 
 ### Input variables:
 
