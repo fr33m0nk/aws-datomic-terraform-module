@@ -46,18 +46,25 @@ memcached-auto-discovery=true
 aws-s3-log-bucket-id=${s3_log_bucket_id}
 aws-cloudwatch-region=${cloudwatch_region}
 aws-cloudwatch-dimension-value=${cloudwatch_dimension}
-write-concurrency=${write-concurrency}
-read-concurrency=${read-concurrency}
+write-concurrency=${write_concurrency}
+read-concurrency=${read_concurrency}
 heartbeat-interval-msec=5000
-metrics-callback=fr33m0nk.datomic-datadog-reporter/send-metrics
 EOF
+
+if [ ${enable_custom_metric_callback} -eq true ]
+  then
+    echo "metrics-callback=$metric_callback_library" | tee -a /opt/datomic_pro/aws_transactor.properties
+fi
 
 ## Set correct permissions
 chmod 744 /opt/datomic_pro/aws_transactor.properties
 chown -R ${distro_user}:datomic /opt/datomic_pro
 
 ## start datadog agent
-systemctl start datadog-agent
+if [ ${enable_datadog} -eq true ]
+  then
+    systemctl restart datadog-agent
+fi
 
 # Start transactor process
 su - ubuntu -c "/opt/datomic_pro/bin/transactor /opt/datomic_pro/aws_transactor.properties" || true

@@ -128,25 +128,28 @@ locals {
   }
 
   transactor_provisioning_template = templatefile("./scripts/run_transactor.sh", {
-    distro_user            = var.datomic_transactor_ami_user
-    log_level              = var.datomic_transactor_log_level
-    jvm_xmx                = var.datomic_transactor_jvm_xmx
-    jvm_xms                = var.datomic_transactor_jvm_xms
-    java_opts              = var.datomic_transactor_java_opts
-    protocol               = "ddb"
-    datomic_license        = var.datomic_license
-    aws_dynamodb_table     = aws_dynamodb_table.datomic_dynamo_db_table.name
-    aws_dynamodb_region    = var.aws_region
-    transactor_role        = aws_iam_role.datomic_transactor_iam_role.name
-    peer_role              = var.datomic_peer_iam_role_name
-    memory_index_max       = var.datomic_transactor_memory_index_max
-    memory_index_threshold = var.datomic_transactor_memory_index_threshold
-    object_cache_max       = var.datomic_transactor_object_cache_max
-    s3_log_bucket_id       = aws_s3_bucket.datomic_transactor_logs.id
-    memcached_uri          = aws_elasticache_cluster.datomic_memcached_cluster.configuration_endpoint
-    cloudwatch_region      = var.aws_region
-    cloudwatch_dimension   = "${terraform.workspace}_datomic_transactors"
-    write-concurrency      = var.datomic_transactor_write_concurrency
-    read-concurrency       = var.datomic_transactor_read_concurrency
+    distro_user                   = var.datomic_transactor_ami_user
+    log_level                     = var.datomic_transactor_log_level
+    jvm_xmx                       = var.datomic_transactor_jvm_xmx
+    jvm_xms                       = var.datomic_transactor_jvm_xms
+    java_opts                     = var.datomic_transactor_java_opts
+    protocol                      = "ddb"
+    datomic_license               = var.datomic_license
+    aws_dynamodb_table            = aws_dynamodb_table.datomic_dynamo_db_table.name
+    aws_dynamodb_region           = var.aws_region
+    transactor_role               = aws_iam_role.datomic_transactor_iam_role.name
+    peer_role                     = var.datomic_peer_iam_role_name
+    memory_index_max              = var.datomic_transactor_memory_index_max
+    memory_index_threshold        = var.datomic_transactor_memory_index_threshold
+    object_cache_max              = var.datomic_transactor_object_cache_max
+    s3_log_bucket_id              = aws_s3_bucket.datomic_transactor_logs.id
+    memcached_uri                 = aws_elasticache_cluster.datomic_memcached_cluster.configuration_endpoint
+    cloudwatch_region             = var.aws_region
+    cloudwatch_dimension          = "${terraform.workspace}_datomic_transactors"
+    write_concurrency             = var.datomic_transactor_write_concurrency
+    read_concurrency              = var.datomic_transactor_read_concurrency
+    enable_datadog                = var.datomic_transactor_enable_datadog
+    enable_custom_metric_callback = var.datomic_transactor_enable_custom_metric_callback
+    metric_callback_library       = var.datomic_transactor_metric_callback_library
   })
 }
