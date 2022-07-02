@@ -17,12 +17,12 @@ variable "vpc_id" {
 ### Datomic peer vars
 variable "datomic_peer_security_group_id" {
   type        = string
-  description = "Security group id of peer to allow communication to Datomic transactor and related resources"
+  description = "Security group id already applied to peer to allow communication to Datomic transactor and related resources"
 }
 
-variable "datomic_peer_role_name" {
+variable "datomic_peer_iam_role_name" {
   type        = string
-  description = "IAM role name for Elastic Beanstalk. Serves as the Peer role name"
+  description = "IAM role name of a role already applied to Peer. Serves as the Peer role name in Datomic Transactor configuration"
 }
 
 ################################
@@ -38,7 +38,7 @@ variable "datomic_transactor_ami_owner_id" {
 }
 
 variable "datomic_transactor_ami_user" {
-  default = "AMI user with privileges for starting a Java process "
+  default = "AMI user with privileges for starting a Java process"
 }
 
 variable "datomic_transactor_instance_type" {
@@ -93,11 +93,6 @@ variable "datomic_license" {
   description = "Datomic licence key"
 }
 
-variable "datomic_transactors_desired_capacity" {
-  type        = number
-  description = "The number of Amazon EC2 instances that should be running in the group"
-}
-
 variable "datomic_transactor_root_volume_size" {
   type        = number
   description = "The size of the Datomic Transactor's root volume in gigabytes"
@@ -121,11 +116,13 @@ variable "datomic_transactor_read_concurrency" {
 variable "datomic_transactors_max_instance_count" {
   type        = number
   description = "The maximum size of the Auto Scaling Group"
+  default     = 3
 }
 
 variable "datomic_transactors_min_instance_count" {
   type        = number
-  description = "The minimum size of the Auto Scaling Group"
+  description = "The minimum size of the Auto Scaling Group. Also serves as the desired capacity"
+  default     = 2
 }
 
 ################################

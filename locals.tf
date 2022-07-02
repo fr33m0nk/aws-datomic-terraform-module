@@ -138,7 +138,7 @@ locals {
     aws_dynamodb_table     = aws_dynamodb_table.datomic_dynamo_db_table.name
     aws_dynamodb_region    = var.aws_region
     transactor_role        = aws_iam_role.datomic_transactor_iam_role.name
-    peer_role              = var.datomic_peer_role_name
+    peer_role              = var.datomic_peer_iam_role_name
     memory_index_max       = var.datomic_transactor_memory_index_max
     memory_index_threshold = var.datomic_transactor_memory_index_threshold
     object_cache_max       = var.datomic_transactor_object_cache_max

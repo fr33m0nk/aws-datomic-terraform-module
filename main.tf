@@ -246,7 +246,7 @@ resource "aws_launch_configuration" "datomic_transactor_launch_config" {
 
 resource "aws_autoscaling_group" "datomic_transactors_autoscaling_group" {
   name                      = "${terraform.workspace}_datomic_transactors_autoscaling_group_${aws_launch_configuration.datomic_transactor_launch_config.name}"
-  desired_capacity          = var.datomic_transactors_desired_capacity
+  desired_capacity          = var.datomic_transactors_min_instance_count
   max_size                  = var.datomic_transactors_max_instance_count
   min_size                  = var.datomic_transactors_min_instance_count
   launch_configuration      = aws_launch_configuration.datomic_transactor_launch_config.name
