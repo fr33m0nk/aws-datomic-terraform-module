@@ -1,8 +1,3 @@
-variable "aws_account_profile" {
-  type        = string
-  description = "AWS account profile to be used for creating the resources. Refer ~/.aws/credentials or ~/.aws/config to select the right profile"
-}
-
 variable "aws_region" {
   type        = string
   description = "AWS region in which resources for Datomic get provisioned"
