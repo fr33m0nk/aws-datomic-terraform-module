@@ -63,3 +63,6 @@
 | `datomic_transactor_dynamo_db.table_write_autoscaling_policy` | [Detailed attributes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy#attributes-reference) of the Dynamo DB Table Write Auto scaling Policy for Datomic Transactor |
 | `datomic_transactor_memcached.cluster`                        | [Detailed attributes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_cluster#attributes-reference) of the Memcached cluster provisioned for Datomic Transactor               |
 | `datomic_transactor_memcached.cluster_security_group`         | [Detailed attributes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#attributes-reference) of the security group provisioned for Memcached used by Datomic Transactor     |
+
+## License
+##### Copyright © 2022 Prashant Sinha Distributed under the Eclipse Public License version 1.0.
