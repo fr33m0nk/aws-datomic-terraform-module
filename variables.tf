@@ -37,16 +37,10 @@ variable "datomic_transactor_ami_user" {
   description = "AMI user with privileges for starting a Java process"
 }
 
-variable "datomic_transactor_enable_custom_metric_callback" {
-  type        = bool
-  description = "Enables custom Metric callback library for emitting stats to Datadog, Prometheus etc. Must be available on Datomic Transactor Classpath. Example: https://github.com/fr33m0nk/datomic-datadog-reporter"
-  default     = false
-}
-
 variable "datomic_transactor_metric_callback_library" {
   type        = string
   description = "Metric callback library for emitting stats to Datadog, Prometheus etc. Must be available on Datomic Transactor Classpath. Example: https://github.com/fr33m0nk/datomic-datadog-reporter"
-  default     = ""
+  default     = null
 }
 
 variable "datomic_transactor_enable_datadog" {

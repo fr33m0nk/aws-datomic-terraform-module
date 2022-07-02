@@ -51,7 +51,7 @@ read-concurrency=${read_concurrency}
 heartbeat-interval-msec=5000
 EOF
 
-if [ ${enable_custom_metric_callback} -eq true ]
+if [ -z "$metric_callback_library" ]
   then
     echo "metrics-callback=$metric_callback_library" | tee -a /opt/datomic_pro/aws_transactor.properties
 fi
