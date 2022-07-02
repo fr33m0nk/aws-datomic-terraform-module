@@ -1,8 +1,7 @@
 # Terraform module for provisioning Datomic Transactor On-Prem version in AWS
 
-
-
 ### Input variables:
+
 | Module variable       | Description                                                                                                                                                                                                                   | Value type | Default value |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------------|
 | `aws_account_profile` | AWS account profile to be used for creating the resources. Refer ~/.aws/credentials or ~/.aws/config to select the right profile                                                                                              | `string`   | NA            |
@@ -48,6 +47,7 @@
 |`memcached_apply_changes_immediately`| Applies changes immediately if true else the changes are applied in the next maintenance window                                                                                                                               | `bool`     | NA            |
 
 ### Output attributes:
+
 | Module variable                                                   | Description                                                                                                                                                                                                   |
 |-------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datomic_transactor.s3_logs`                                  | [Detailed attributes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#attributes-reference) of the S3 resource provsioned to act as Datomic Transactor Write ahead logs |
