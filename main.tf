@@ -283,3 +283,9 @@ resource "aws_iam_policy" "datomic_peer_access_policy" {
     Environment = terraform.workspace
   }
 }
+
+resource "aws_iam_policy_attachment" "datomic_peer_access_policy_attachment" {
+  name       = "${terraform.workspace}_datomic_peer_access_policy"
+  roles = [var.datomic_peer_iam_role_name]
+  policy_arn = aws_iam_policy.datomic_peer_access_policy.arn
+}

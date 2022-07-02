@@ -14,6 +14,7 @@ output "datomic_peer" {
   description = "Properties of resources provisioned for Datomic Peer"
   value = {
     iam_policy = aws_iam_policy.datomic_peer_access_policy
+    iam_policy_attachment = aws_iam_policy_attachment.datomic_peer_access_policy_attachment
   }
 }
 
