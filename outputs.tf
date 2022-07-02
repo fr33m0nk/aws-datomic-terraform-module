@@ -30,7 +30,7 @@ output "datomic_transactor_dynamo_db" {
 }
 
 output "datomic_transactor_memcached" {
-  description = "Properties of Dynamo DB resources provisioned for Datomic Transactor"
+  description = "Properties of Memcached Elasticache resources provisioned for Datomic Transactor"
   value = {
     cluster_security_group = aws_security_group.datomic_memcached_cluster_security_group
     cluster                = aws_elasticache_cluster.datomic_memcached_cluster
