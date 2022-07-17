@@ -226,7 +226,7 @@ resource "aws_launch_configuration" "datomic_transactor_launch_config" {
   ]
   user_data                        = local.transactor_provisioning_template
   ebs_optimized                    = true
-  key_name                         = "developer_key_pair"
+  key_name                         = var.keypair_name
   vpc_classic_link_security_groups = []
 
   root_block_device {
@@ -244,33 +244,38 @@ resource "aws_launch_configuration" "datomic_transactor_launch_config" {
   }
 }
 
-resource "aws_autoscaling_group" "datomic_transactors_autoscaling_group" {
-  name                      = "${terraform.workspace}_datomic_transactors_autoscaling_group_${aws_launch_configuration.datomic_transactor_launch_config.name}"
-  desired_capacity          = var.datomic_transactors_min_instance_count
-  max_size                  = var.datomic_transactors_max_instance_count
-  min_size                  = var.datomic_transactors_min_instance_count
-  launch_configuration      = aws_launch_configuration.datomic_transactor_launch_config.name
-  vpc_zone_identifier       = data.aws_subnets.available.ids
-  health_check_grace_period = 800
-  wait_for_capacity_timeout = "10m"
-  health_check_type         = "EC2"
-  termination_policies      = ["OldestInstance", "OldestLaunchConfiguration"]
+resource "aws_cloudformation_stack" "datomic_transactors_rolling_update_asg" {
+  name          = "${terraform.workspace}-datomic-transactors-autoscaling-group"
+  template_body = file("${path.module}/cloudformation_stack_asg/auto_scaling_group_template.json")
+  parameters = {
+    AutoScalingGroupName          = "${terraform.workspace}_datomic_transactors_autoscaling_group"
+    AutoScalingGroupDescription   = "${terraform.workspace} Rolling ASG for Datomic Transactors"
+    AvailabilityZoneNames         = join(",", var.availability_zone_names)
+    VPCZoneIdentifier             = join(",", var.subnet_ids)
+    LaunchConfigurationName       = aws_launch_configuration.datomic_transactor_launch_config.name
+    MaximumCapacity               = var.datomic_transactors_max_instance_count
+    DesiredCapacity               = var.datomic_transactors_desired_instance_count
+    MinimumCapacity               = var.datomic_transactors_min_instance_count
+    MinInstancesInService         = "1"
+    MaxBatchSize                  = "1"
+    PauseTime                     = "180"
+    HealthCheckType               = "EC2"
+    HealthCheckGracePeriod        = "300"
+    MinSuccessfulInstancesPercent = "100"
+    UpdatePauseTime               = "120"
+    Environment                   = terraform.workspace
+  }
 
   lifecycle {
     create_before_destroy = true
   }
 
-  tag {
-    key                 = "Name"
-    value               = "${terraform.workspace}_datomic_transactors_autoscaling_group"
-    propagate_at_launch = true
+  tags = {
+    Name        = "${terraform.workspace}_datomic_transactors_cfs_rolling_update_asg"
+    Environment = terraform.workspace
   }
 
-  tag {
-    key                 = "Environment"
-    value               = terraform.workspace
-    propagate_at_launch = true
-  }
+  depends_on = [aws_launch_configuration.datomic_transactor_launch_config]
 }
 
 resource "aws_iam_policy" "datomic_peer_access_policy" {
@@ -286,6 +291,6 @@ resource "aws_iam_policy" "datomic_peer_access_policy" {
 
 resource "aws_iam_policy_attachment" "datomic_peer_access_policy_attachment" {
   name       = "${terraform.workspace}_datomic_peer_access_policy"
-  roles = [var.datomic_peer_iam_role_name]
+  roles      = [var.datomic_peer_iam_role_name]
   policy_arn = aws_iam_policy.datomic_peer_access_policy.arn
 }

@@ -1,0 +1,165 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "AutoScalingGroupName": {
+      "Type": "String",
+      "Description": "Name of the Auto Scaling Group"
+    },
+    "AutoScalingGroupDescription": {
+      "Type": "String",
+      "Description": "Description about the Auto Scaling Group"
+    },
+    "AvailabilityZoneNames": {
+      "Type": "List<AWS::EC2::AvailabilityZone::Name>",
+      "Description": "The availability zones to be used for the app"
+    },
+    "LaunchConfigurationName": {
+      "Type": "String",
+      "Description": "The launch configuration name"
+    },
+    "VPCZoneIdentifier": {
+      "Type": "List<AWS::EC2::Subnet::Id>",
+      "Description": "VPC subnet IDs"
+    },
+    "MaximumCapacity": {
+      "Type": "String",
+      "Description": "Maximum desired capacity size"
+    },
+    "DesiredCapacity": {
+      "Type": "String",
+      "Description": "Desired capacity size"
+    },
+    "MinimumCapacity": {
+      "Type": "String",
+      "Description": "Minimum desired capacity size"
+    },
+    "MinInstancesInService": {
+      "Type": "String",
+      "Description": "Minimum instance in service during roll out"
+    },
+    "MaxBatchSize": {
+      "Type": "String",
+      "Description": "Maximum resources to process in a batch"
+    },
+    "PauseTime": {
+      "Type": "String",
+      "Description": "Pause between processing rollout for batches"
+    },
+    "HealthCheckType": {
+      "Type": "String",
+      "Description": "Health check type for ASG. Can be EC2 or ELB"
+    },
+    "HealthCheckGracePeriod": {
+      "Type": "String",
+      "Description": "Grace period before health check"
+    },
+    "MinSuccessfulInstancesPercent": {
+      "Type": "String",
+      "Description": "Minimum successful percent to consider rollout a success"
+    },
+    "UpdatePauseTime": {
+      "Type": "String",
+      "Description": "The pause time during rollout for the application"
+    },
+    "Environment": {
+      "Type": "String",
+      "Description": "Environment ASG would be created in"
+    }
+  },
+  "Resources": {
+    "AutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroupName"
+        },
+        "AvailabilityZones": {
+          "Ref": "AvailabilityZoneNames"
+        },
+        "VPCZoneIdentifier": {
+          "Ref": "VPCZoneIdentifier"
+        },
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfigurationName"
+        },
+        "MaxSize": {
+          "Ref": "MaximumCapacity"
+        },
+        "DesiredCapacity": {
+          "Ref": "DesiredCapacity"
+        },
+        "MinSize": {
+          "Ref": "MinimumCapacity"
+        },
+        "TerminationPolicies": [
+          "OldestLaunchConfiguration",
+          "OldestInstance"
+        ],
+        "HealthCheckType": {
+          "Ref": "HealthCheckType"
+        },
+        "HealthCheckGracePeriod": {
+          "Ref": "HealthCheckGracePeriod"
+        },
+        "MetricsCollection": [
+          {
+            "Granularity": "1Minute",
+            "Metrics": [
+              "GroupMinSize",
+              "GroupMaxSize",
+              "GroupInServiceInstances",
+              "GroupStandbyInstances",
+              "GroupTotalInstances"
+            ]
+          }
+        ],
+        "NewInstancesProtectedFromScaleIn": false,
+        "Tags": [
+          {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Ref": "AutoScalingGroupName"
+            }
+          },
+          {
+            "Key": "Environment",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Ref": "Environment"
+            }
+          }
+        ]
+      },
+      "UpdatePolicy": {
+        "AutoScalingScheduledAction": {
+          "IgnoreUnmodifiedGroupSizeProperties": true
+        },
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": {
+            "Ref": "MinInstancesInService"
+          },
+          "MaxBatchSize": {
+            "Ref": "MaxBatchSize"
+          },
+          "PauseTime": {
+            "Ref": "PauseTime"
+          },
+          "MinSuccessfulInstancesPercent": {
+            "Ref": "MinSuccessfulInstancesPercent"
+          },
+          "WaitOnResourceSignals": true
+        },
+        "DeletionPolicy": "Delete"
+      }
+    }
+  },
+  "Outputs": {
+    "AsgName": {
+      "Description": "Autoscaling group for Datomic Transactors",
+      "Value": {
+        "Ref": "AutoScalingGroup"
+      }
+    }
+  }
+}

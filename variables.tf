@@ -22,6 +22,17 @@ variable "datomic_peer_iam_role_name" {
 
 ################################
 ### Datomic transactor vars
+
+variable "availability_zone_names" {
+  type        = list(string)
+  description = "List of availability zones for Datomic Transactor"
+}
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "List of Subnet IDs for Datomic Transactor"
+}
+
 variable "datomic_transactor_ami_name" {
   type        = string
   description = "AMI name for the transactor. If AMI is ARM based, then select appropriate `datomic_transactor_instance_type`"
@@ -35,6 +46,12 @@ variable "datomic_transactor_ami_owner_id" {
 variable "datomic_transactor_ami_user" {
   type        = string
   description = "AMI user with privileges for starting a Java process"
+}
+
+
+variable "keypair_name" {
+  type        = string
+  description = "AWS KeyPair name for SSH logins in Transactor instance"
 }
 
 variable "datomic_transactor_metric_callback_library" {
@@ -123,14 +140,20 @@ variable "datomic_transactor_read_concurrency" {
 
 variable "datomic_transactors_max_instance_count" {
   type        = number
-  description = "The maximum size of the Auto Scaling Group"
+  description = "The maximum capacity of the Auto Scaling Group"
   default     = 3
+}
+
+variable "datomic_transactors_desired_instance_count" {
+  type        = number
+  description = "The desired capacity of the Auto Scaling Group."
+  default     = 2
 }
 
 variable "datomic_transactors_min_instance_count" {
   type        = number
-  description = "The minimum size of the Auto Scaling Group. Also serves as the desired capacity"
-  default     = 2
+  description = "The minimum capacity of the Auto Scaling Group."
+  default     = 1
 }
 
 ################################

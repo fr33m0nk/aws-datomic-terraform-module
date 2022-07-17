@@ -6,14 +6,17 @@ output "datomic_transactor" {
     iam_role             = aws_iam_role.datomic_transactor_iam_role
     iam_instance_profile = aws_iam_instance_profile.datomic_transactor_instance_profile
     launch_config        = aws_launch_configuration.datomic_transactor_launch_config
-    autoscaling_group    = aws_autoscaling_group.datomic_transactors_autoscaling_group
+    autoscaling_group = {
+      id      = aws_cloudformation_stack.datomic_transactors_rolling_update_asg.id
+      outputs = aws_cloudformation_stack.datomic_transactors_rolling_update_asg.outputs
+    }
   }
 }
 
 output "datomic_peer" {
   description = "Properties of resources provisioned for Datomic Peer"
   value = {
-    iam_policy = aws_iam_policy.datomic_peer_access_policy
+    iam_policy            = aws_iam_policy.datomic_peer_access_policy
     iam_policy_attachment = aws_iam_policy_attachment.datomic_peer_access_policy_attachment
   }
 }
