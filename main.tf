@@ -226,7 +226,7 @@ resource "aws_launch_configuration" "datomic_transactor_launch_config" {
   ]
   user_data                        = local.transactor_provisioning_template
   ebs_optimized                    = true
-  key_name                         = var.keypair_name
+  key_name                         = var.datomic_transactor_keypair_name
   vpc_classic_link_security_groups = []
 
   root_block_device {
@@ -250,8 +250,8 @@ resource "aws_cloudformation_stack" "datomic_transactors_rolling_update_asg" {
   parameters = {
     AutoScalingGroupName          = "${terraform.workspace}_datomic_transactors_autoscaling_group"
     AutoScalingGroupDescription   = "${terraform.workspace} Rolling ASG for Datomic Transactors"
-    AvailabilityZoneNames         = join(",", var.availability_zone_names)
-    VPCZoneIdentifier             = join(",", var.subnet_ids)
+    AvailabilityZoneNames         = join(",", var.datomic_transactor_availability_zone_names)
+    VPCZoneIdentifier             = join(",", var.datomic_transactor_subnet_ids)
     LaunchConfigurationName       = aws_launch_configuration.datomic_transactor_launch_config.name
     MaximumCapacity               = var.datomic_transactors_max_instance_count
     DesiredCapacity               = var.datomic_transactors_desired_instance_count

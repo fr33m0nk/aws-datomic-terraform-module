@@ -23,12 +23,12 @@ variable "datomic_peer_iam_role_name" {
 ################################
 ### Datomic transactor vars
 
-variable "availability_zone_names" {
+variable "datomic_transactor_availability_zone_names" {
   type        = list(string)
   description = "List of availability zones for Datomic Transactor"
 }
 
-variable "subnet_ids" {
+variable "datomic_transactor_subnet_ids" {
   type        = list(string)
   description = "List of Subnet IDs for Datomic Transactor"
 }
@@ -49,7 +49,7 @@ variable "datomic_transactor_ami_user" {
 }
 
 
-variable "keypair_name" {
+variable "datomic_transactor_keypair_name" {
   type        = string
   description = "AWS KeyPair name for SSH logins in Transactor instance"
 }
