@@ -1,3 +1,5 @@
+## Cognitect has made the Datomic Cloud template available in AWS marketplace and effectively deprecating this module.
+
 # Terraform module for provisioning Datomic Transactor On-Prem version on AWS
 
 ### Input variables:
